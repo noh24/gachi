@@ -1,8 +1,6 @@
-# Dinder – Game Plan
+# Gachi – Game Plan
 
-"Dinner + Cinder": friends join a room, swipe on restaurants, and a little spark lights up when everyone finally agrees on where to eat.
-
----
+"Create a room, invite friends, and decide together"
 
 ## The Core Idea
 
@@ -65,6 +63,7 @@ Next.js on Vercel runs API routes as **serverless functions** — isolated proce
 **Upstash Redis** solves this. It's a hosted key-value store (free tier: 10k commands/day, 256MB) that lives outside your server process. Every vote is written to Redis; every status check reads from Redis. Rooms auto-expire via Redis TTL — you set `EXPIRE room:abc123 86400` (24 hours) and Redis deletes it automatically.
 
 Structure in Redis:
+
 ```
 room:abc123           → JSON blob { mode, expiresAt, userIds[], restaurants[] }
 room:abc123:votes     → Hash { "userId:restaurantId" → "yes"|"no" }
@@ -78,6 +77,7 @@ The restaurant cache key is derived from lat/lng rounded to ~1 mile + radius. Sa
 ## Data Flow
 
 **Async Mode**
+
 ```
 POST /api/rooms            → create room (geocode → Yelp → store in Redis), return roomId
 GET  /api/rooms/:id        → get restaurant list + timer + mode
@@ -87,6 +87,7 @@ GET  /api/rooms/:id/status → check Redis: "voting" | "done" + top n results
 ```
 
 **Sync Mode** (later)
+
 ```
 Same REST endpoints +
 Pusher channel per room → server pushes "next-card" and "results" events

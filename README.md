@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gachi
 
-## Getting Started
+> Create a room, invite friends, and decide where to eat — together. No sign in required!
 
-First, run the development server:
+Gachi (같이 — "together" in Korean) is a group restaurant-decision app. The host creates a room, everyone swipes on restaurants, and the top picks are revealed when the votes are in.
+
+## How it works
+
+1. Host creates a room and shares the link
+2. Everyone swipes right on restaurants they want, left on ones they don't
+3. See what everyone agreed on
+
+## Getting started
 
 ```bash
+git clone https://github.com/your-username/gachi.git
+cd gachi
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in your keys:
 
-## Learn More
+```
+YELP_API_KEY=
+NEXT_PUBLIC_MAPBOX_TOKEN=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+PUSHER_APP_ID=
+PUSHER_KEY=
+PUSHER_SECRET=
+PUSHER_CLUSTER=
+```
 
-To learn more about Next.js, take a look at the following resources:
+> Note: env vars are not required to run locally during development — fake data is used until the backend is wired up.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 16 + TypeScript** — frontend and API routes
+- **shadcn/ui + Tailwind** — UI components
+- **Framer Motion** — swipe gestures and animations
+- **Mapbox + react-map-gl** — location picker
+- **Yelp Fusion API** — restaurant data
+- **Upstash Redis** — vote storage and room state
+- **Pusher** — real-time sync mode
+- **Vercel** — deployment
