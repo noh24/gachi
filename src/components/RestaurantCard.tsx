@@ -6,9 +6,9 @@ type Props = {
 	restaurant: Restaurant
 }
 
-export default function RestaurantCard({ restaurant }: Props) {
+export function RestaurantCard({ restaurant }: Props) {
 	return (
-		<div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden shadow-xl">
+		<div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.08)]">
 			<Image
 				src={restaurant.imageUrl}
 				alt={`Picture of ${restaurant.name}`}
