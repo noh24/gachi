@@ -3,6 +3,7 @@
 import { Ballot } from "@/components/Ballot";
 import { mockRestaurants } from "@/lib/mockRestaurants";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function Room() {
 	const [votes, setVotes] = useState<Record<string, "yes" | "no"> | null>(null);
@@ -16,10 +17,17 @@ export default function Room() {
 	}
 
 	return (
-		<main>
-			{Object.entries(votes).map((vote) => (
-				<p key={vote[0]}>{mockRestaurants.find(r => r.id == vote[0])?.name}: {vote[1]}</p>
-			))}
+		<main className=" flex-1 flex flex-col justify-around px-2 gap-4">
+			<section>
+				{Object.entries(votes).map((vote) => (
+					<p key={vote[0]}>{mockRestaurants.find(r => r.id == vote[0])?.name}: {vote[1]}</p>
+				))}
+			</section>
+			<Button
+				onClick={() => setVotes(null)}
+			>
+				Reset</Button>
+
 		</main>
 	)
 }

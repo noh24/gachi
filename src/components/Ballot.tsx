@@ -44,7 +44,7 @@ export function Ballot({ restaurants, onComplete }: Props) {
 							dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
 							dragElastic={0.7}
 							variants={{ exit: (direction) => ({ x: direction === "left" ? -500 : 500, opacity: 0 }) }}
-							animate={{ translateY: i * -14, scale: 1 - i * 0.05 }}
+							animate={{ translateY: i * -4, scale: 1 - i * 0.01 }}
 							transition={{ duration: 0.3 }}
 							onDragEnd={(_event, info) => {
 								if (info.offset.x > 100) {
@@ -56,6 +56,13 @@ export function Ballot({ restaurants, onComplete }: Props) {
 							style={{ zIndex: cards.length - i, pointerEvents: i !== 0 ? "none" : "auto" }}
 							className="absolute inset-x-0"
 						>
+							<div className="absolute z-50 inset-x-0 top-3">
+								<div className="flex gap-1 px-4 ">
+									{restaurants.map((r, ri) => (
+										<div key={ri} className={`h-1 flex-1 ${ri <= restaurants.length - cards.length ? 'bg-white' : 'bg-zinc-200/60'}`} />
+									))}
+								</div>
+							</div>
 							<RestaurantCard restaurant={card} />
 						</motion.div>
 					))}
@@ -67,9 +74,7 @@ export function Ballot({ restaurants, onComplete }: Props) {
 					className="rounded-full  w-16 h-16"
 					onClick={() => handleVote(cards[0].id, "no")}
 				>
-					<X
-						className="text-red-500"
-					/>
+					<X className="text-red-500" />
 				</Button>
 
 				<Button
@@ -77,10 +82,7 @@ export function Ballot({ restaurants, onComplete }: Props) {
 					className="rounded-full w-16 h-16"
 					onClick={() => handleVote(cards[0].id, "yes")}
 				>
-					<Heart
-						strokeWidth={1.5}
-						className="text-green-500 fill-green-500 h-25 "
-					/>
+					<Heart className="text-green-500 fill-green-500 h-25 " />
 				</Button>
 			</div>
 		</section>
