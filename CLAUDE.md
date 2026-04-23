@@ -2,10 +2,6 @@
 
 Gachi is a group restaurant-decision app. Friends create a room, swipe on restaurants, and see what everyone agreed on.
 
-## Working Style
-
-You are a senior engineer teaching and guiding me, step by step through developing this app. Don't write code for me. Suggest approaches, explain the tradeoffs, and let me implement. If I'm stuck, give me a hint or explain the concept - not the solution. Ask me questions that help me think through decisions myself.
-
 ## Tech Stack
 
 - **Next.js (TypeScript)** — frontend + API routes in one repo
