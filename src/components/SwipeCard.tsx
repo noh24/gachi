@@ -1,8 +1,13 @@
 "use client"
 
 import { Restaurant } from "@/types/restaurant"
-import { motion, useMotionValue, useTransform } from "framer-motion"
+import { animate, motion, useMotionValue, useTransform } from "framer-motion"
 import { RestaurantCard } from "./RestaurantCard"
+import { forwardRef, useImperativeHandle } from "react";
+
+export interface SwipeCardRef {
+	swipe: (dir: "left" | "right") => void;
+}
 
 type Props = {
 	index: number,
@@ -13,11 +18,20 @@ type Props = {
 	onVote: (cardId: string, vote: "yes" | "no") => void
 }
 
-export function SwipeCard({ index, voteCount, totalCards, card, swipeDir, onVote }: Props) {
+export const SwipeCard = forwardRef<SwipeCardRef, Props>(({ index, voteCount, totalCards, card, swipeDir, onVote }: Props, ref) => {
 	const x = useMotionValue(0)
 
 	const greenOpacity = useTransform(x, [0, 100], [0, 1])
 	const redOpacity = useTransform(x, [-100, 0], [1, 0])
+
+	useImperativeHandle(ref, () => ({
+		swipe: (dir) => {
+			const target = dir === "right" ? 100 : -100
+			animate(x, target, { duration: 0.2 }).then(() => {
+				onVote(card.id, dir === "right" ? "yes" : "no")
+			})
+		}
+	}))
 
 	return (
 		<motion.div
@@ -61,4 +75,4 @@ export function SwipeCard({ index, voteCount, totalCards, card, swipeDir, onVote
 			<RestaurantCard restaurant={card} />
 		</motion.div>
 	)
-}
+})
