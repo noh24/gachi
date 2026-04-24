@@ -30,13 +30,9 @@ GAME_PLAN.md         # full product spec, data flow, and build order. Read this 
 
 - Always use `PascalCase.tsx` for components (filename match export name)
 - API routes file named `route.ts` and folder determines URL:
-e.g. `app/api/rooms/route.ts => /api/rooms` or `app/api/rooms/[id]/route.ts => /api/rooms/abc123`
+  e.g. `app/api/rooms/route.ts => /api/rooms` or `app/api/rooms/[id]/route.ts => /api/rooms/abc123`
 - Next.js pages: same idea, always page.tsx; Folder = URL segment
 - Named exports for components
 - Types defined in src/types/, not inline
 - No `any`
 - No comments unless the why is non-obvious
-
-## Current Phase
-
-Step 1 — swipe UI with fake data only. No API calls, no backend yet.
