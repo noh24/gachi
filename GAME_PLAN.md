@@ -29,7 +29,7 @@ Both modes share the same room/voting logic — only what triggers "advance to n
 
 **Swipe gestures:** `framer-motion` — industry-standard animation library. You'll use its `drag` feature to detect swipe direction and animate cards off screen. More transferable than a purpose-built swipe lib.
 
-**Map:** Mapbox + `react-map-gl` — free tier (50k map loads/month, no credit card). The host searches or drops a pin; we read the lat/lng directly from the map. Looks great, portfolio-worthy.
+**Map:** MapLibre GL + `react-map-gl` — fully open-source, no API key or account needed. The host can search a location, use their current GPS location, or drop a pin on the map; we read the lat/lng directly. Looks great, portfolio-worthy.
 
 **Realtime (sync mode only):** Pusher free tier — hosted WebSocket service. Server pushes "next-card" and "results" events so all clients advance together.
 
@@ -50,7 +50,7 @@ Both modes share the same room/voting logic — only what triggers "advance to n
 
 Free tier: 5,000 calls/day, no credit card required. Returns name, photos, rating, price level, cuisine, hours, and address — everything we need for the cards.
 
-The host picks a location on the Mapbox map (lat/lng) and a radius. We call Yelp's `/businesses/search` endpoint with those coordinates and return the list to the room.
+The host picks a location on the MapLibre GL map (lat/lng) and a radius. We call Yelp's `/businesses/search` endpoint with those coordinates and return the list to the room.
 
 ---
 
@@ -97,7 +97,7 @@ Pusher channel per room → server pushes "next-card" and "results" events
 
 ## Room Creator Sets
 
-- Location (Mapbox map — search or drop a pin → lat/lng)
+- Location (MapLibre GL map — search a place, use current GPS location, or drop a pin → lat/lng)
 - Radius (0.5 / 1 / 3 / 5 miles)
 - Mode (Async or Sync)
 - Optional time limit (e.g. 30 min for the whole session)
@@ -107,13 +107,23 @@ Pusher channel per room → server pushes "next-card" and "results" events
 ## Build Order
 
 1. **Swipe UI with fake data** — card stack + swipe animation with `framer-motion`. No API, no backend.
-2. **Room creation + join** — Next.js API routes, Mapbox location picker, Upstash Redis, localStorage user IDs
+2. **Room creation + join** — Next.js API routes, MapLibre GL location picker (`/create-room` page), Upstash Redis, localStorage user IDs
 3. **Yelp integration** — real restaurants + photos based on map pin + radius
 4. **Voting + polling** — POST votes to Redis, poll `/status`, show results (async mode done)
 5. **Caching layer** — deduplicate Yelp calls using Redis cache key by area
 6. **Sync mode** — add Pusher, synchronized card advancement
 
-Don't touch step 2 until step 1 feels great. The swipe UX is the whole product.
+---
+
+## Current Phase + Plan
+
+1. Stage 2
+2. Parent owns location state and passes into Map
+3. Map navigates to location given by parent
+4. Search bar in parent
+5. Use my location / current location in parent
+6. Select a spot on the map in Map
+7. Drag marker to select a spot in Map
 
 ---
 
