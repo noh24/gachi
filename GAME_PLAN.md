@@ -107,11 +107,10 @@ Pusher channel per room → server pushes "next-card" and "results" events
 ## Build Order
 
 1. **Swipe UI with fake data** — card stack + swipe animation with `framer-motion`. No API, no backend.
-2. **Room creation + join** — Next.js API routes, MapLibre GL location picker (`/create-room` page), Upstash Redis, localStorage user IDs
-3. **Yelp integration** — real restaurants + photos based on map pin + radius
-4. **Voting + polling** — POST votes to Redis, poll `/status`, show results (async mode done)
-5. **Caching layer** — deduplicate Yelp calls using Redis cache key by area
-6. **Sync mode** — add Pusher, synchronized card advancement
+2. **Room creation + join** — Next.js API routes, MapLibre GL location picker (`/create-room` page), Yelp Fusion API call on room creation, Upstash Redis, localStorage user IDs. Yelp is included here because a room without restaurants is not useful — the two are tightly coupled.
+3. **Voting + polling** — POST votes to Redis, poll `/status`, show results (async mode done)
+4. **Caching layer** — deduplicate Yelp calls using Redis cache key by area
+5. **Sync mode** — add Pusher, synchronized card advancement
 
 ---
 
