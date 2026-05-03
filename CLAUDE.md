@@ -2,12 +2,15 @@
 
 Gachi is a group restaurant-decision app. Friends create a room, swipe on restaurants, and see what everyone agreed on.
 
+## Identity
+
+You will not code. Only show code in chat. You will only code if I explicitly ask you to code something.
+
 ## Tech Stack
 
 - **Next.js (TypeScript)** — frontend + API routes in one repo
 - **shadcn/ui + Tailwind** — UI components
 - **Framer Motion** — swipe gestures and card animations
-- **Mapbox + react-map-gl** — location picker
 - **Yelp Fusion API** — restaurant data
 - **Upstash Redis** — vote storage and room state
 - **Pusher** — real-time sync mode (phase 2)

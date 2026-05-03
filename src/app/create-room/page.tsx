@@ -3,12 +3,19 @@
 import Map, { LocationValue } from '@/components/Map';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 
 export default function CreateRoom() {
+	const router = useRouter();
+
 	const [location, setLocation] = useState<LocationValue>();
 
 	return (
 		<div className="p-6">
+			<Input
+				placeholder='Type in address'
+			></Input>
 			<Map value={location} onChange={setLocation} />
 			<p>{location?.lat.toFixed(6)}</p>
 			<p>{location?.lng.toFixed(6)}</p>
@@ -33,6 +40,13 @@ export default function CreateRoom() {
 				}}
 			>
 				Use my location
+			</Button>
+			<Button>
+				Create
+			</Button>
+			<Button
+				onClick={() => router.push('/')}>
+				Cancel
 			</Button>
 		</div>
 	);
