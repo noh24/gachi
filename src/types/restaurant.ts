@@ -3,7 +3,7 @@ export type Restaurant = {
 	name: string;
 	cuisine: string;
 	rating: number; // 1.0 - 5.0
-	priceLevel: "$" | "$$" | "$$$" | "$$$$";
+	priceLevel: '$' | '$$' | '$$$' | '$$$$';
 	imageUrl: string;
 	address: string;
-}
+};
