@@ -35,9 +35,9 @@ Granular step-by-step breakdown. Check items off as you go.
 
 ### Radius Selector
 
-- [ ] State for selected radius — fixed options: 0.5 / 1 / 3 / 5 miles
-- [ ] UI: segmented button group (not a range slider — values are discrete)
-- [ ] Draw a circle on the map at the selected radius using a MapLibre GeoJSON circle layer
+- [x] State for selected radius — fixed options: 0.5 / 1 / 3 / 5 miles
+- [x] UI: segmented button group (not a range slider — values are discrete)
+- [] Draw a circle on the map at the selected radius using a MapLibre GeoJSON circle layer
 
 ### Mode Selector
 

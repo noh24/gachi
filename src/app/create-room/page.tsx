@@ -1,22 +1,35 @@
 'use client';
 
 import Map, { LocationValue } from '@/components/Map';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
 import { useRouter } from 'next/navigation';
 import { GeocodingSuggestion } from '@/types/geocoding';
 import { LocateFixed } from 'lucide-react';
 
 export default function CreateRoom() {
+	const RADIUS_OPTIONS = [0.5, 1, 3, 5];
 	const router = useRouter();
 
 	const [location, setLocation] = useState<LocationValue>();
+
 	const [input, setInput] = useState<string>('');
 	const [suggestions, setSuggestions] = useState<GeocodingSuggestion[] | null>(null);
+	const [isFocused, setIsFocused] = useState<boolean>(false);
+	const isSelecting = useRef<boolean>(false);
+
+	const [radiusIndex, setRadiusIndex] = useState(1);
+	const selectedRadius = RADIUS_OPTIONS[radiusIndex];
 
 	useEffect(() => {
 		const timer = setTimeout(async () => {
+			if (isSelecting.current) {
+				isSelecting.current = false;
+				return;
+			}
+
 			if (!input.trim()) {
 				setSuggestions(null);
 				return;
@@ -45,9 +58,7 @@ export default function CreateRoom() {
 							lng: 0,
 						};
 						setSuggestions([empty]);
-					}
-					else{
-
+					} else {
 						setSuggestions(data.suggestions);
 					}
 				}
@@ -60,24 +71,28 @@ export default function CreateRoom() {
 	}, [input]);
 
 	return (
-		<section className='flex flex-col w-full gap-4'>
-			<div className='flex gap-2'>
+		<section className='flex flex-col w-full gap-4 justify-center items-center'>
+			<div className='flex gap-2 w-full'>
 				<div className='relative flex-1'>
 					<Input
 						placeholder='Type in address'
-						onChange={(e) => setInput(e.target.value)}
 						value={input}
+						onChange={(e) => setInput(e.target.value)}
+						onFocus={() => setIsFocused(true)}
+						onBlur={() => setIsFocused(false)}
 					/>
-					{suggestions != null && (
+					{suggestions != null && isFocused && (
 						<ul className='absolute top-full w-full z-10 bg-zinc-800 text-zinc-400 mt-2 rounded-xl'>
 							{suggestions.map((s) => (
 								<li
 									key={s.label}
 									className='border-b-2 p-2 cursor-pointer hover:bg-zinc-600'
-									onClick={() => {
+									onMouseDown={(e) => {
+										e.preventDefault();
+										isSelecting.current = true;
+										setInput(s.label);
 										setLocation({ lat: s.lat, lng: s.lng });
 										setSuggestions(null);
-										setInput('');
 									}}
 								>
 									{s.label}
@@ -116,8 +131,24 @@ export default function CreateRoom() {
 				value={location}
 				onChange={setLocation}
 			/>
+			<div className='mx-auto flex flex-col w-1/2'>
+				<Slider
+					min={0}
+					max={3}
+					step={1}
+					value={[radiusIndex]}
+					onValueChange={([i]) => setRadiusIndex(i)}
+				></Slider>
+			</div>
 
-			<div>
+			<div className='flex justify-between text-xs text-muted-foreground w-4/7'>
+				<span className={radiusIndex === 0 ? `text-amber-500` : ``}>0.5 mi</span>
+				<span className={radiusIndex === 1 ? `text-amber-500` : ``}>1 mi</span>
+				<span className={radiusIndex === 2 ? `text-amber-500` : ``}>3 mi</span>
+				<span className={radiusIndex === 3 ? `text-amber-500` : ``}>5 mi</span>
+			</div>
+
+			<div className=''>
 				<Button>Create</Button>
 				<Button onClick={() => router.push('/')}>Cancel</Button>
 			</div>
