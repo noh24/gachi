@@ -14,7 +14,7 @@ const DEFAULT_LOCATION: LocationValue = {
 	lat: 42.9634,
 	lng: -85.6681,
 };
-const MAP_ZOOM: number = 10;
+const MAP_ZOOM: number = 14;
 
 const buildRadiusCircle = (loc: LocationValue, radiusInMiles: number) =>
 	turfCircle([loc.lng, loc.lat], radiusInMiles, { units: 'miles' });
@@ -68,7 +68,7 @@ export default function Map({
 
 		const map = new maplibregl.Map({
 			container: mapContainer.current,
-			style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
+			style: 'https://tiles.openfreemap.org/styles/liberty',
 			center: initialLngLat,
 			zoom: MAP_ZOOM,
 		});

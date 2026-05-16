@@ -39,7 +39,7 @@ Granular step-by-step breakdown. Check items off as you go.
 - [x] UI: segmented button group (not a range slider — values are discrete)
 - [x] Draw a circle on the map at the selected radius using a MapLibre GeoJSON circle layer
 
-### Mode Selector
+### Mode Selector (Not MVP)
 
 - [ ] State for selected mode — `async | sync`
 - [ ] Consider renaming to something more user-friendly than "async / sync"
