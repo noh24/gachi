@@ -45,12 +45,12 @@ Granular step-by-step breakdown. Check items off as you go.
 - [ ] Consider renaming to something more user-friendly than "async / sync"
 - [ ] Consider showing sync as "Coming Soon" (disabled) for first rollout
 
-### Time Limit
+### Time Limit (Not MVP)
 
 - [ ] Default to 24 hours — no UI needed for now, just hardcode on submission
 - [ ] Note: expose as a user-facing option in a later pass
 
-### Submit
+### Submit (AFTER API)
 
 - [ ] Button disabled until location + radius + mode are all set
 - [ ] On click: POST to `/api/rooms` with `{ lat, lng, radius, mode, expiresAt }`
@@ -68,8 +68,9 @@ Why Redis:
 
 - [x] Create Upstash account and database
 - [x] Add `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to `.env.local`
-- [ ] Create `src/lib/redis.ts` — import the Upstash SDK, instantiate one client with the url and token from env vars, export it
+- [x] Create `src/lib/redis.ts` — import the Upstash SDK, instantiate one client with the url and token from env vars, export it
 - [ ] Consider metrics: Redis has no query layer so tracking things like "how many rooms created" requires either a manual counter key, a hybrid Postgres DB later for long-term data, or a zero-config tool like Vercel Analytics
+- [ ] product analytics ^ Posthog? Maybe later?  or simple db?  
 
 ---
 
