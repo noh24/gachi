@@ -74,6 +74,7 @@ export default function CreateRoom() {
 		<section className='flex flex-col w-full gap-4 justify-center items-center'>
 			<div className='flex gap-2 w-full'>
 				<div className='relative flex-1'>
+					{/* Input Text Box */}
 					<Input
 						placeholder='Type in address'
 						value={input}
@@ -81,6 +82,8 @@ export default function CreateRoom() {
 						onFocus={() => setIsFocused(true)}
 						onBlur={() => setIsFocused(false)}
 					/>
+
+					{/* Suggestions Drop Down */}
 					{suggestions != null && isFocused && (
 						<ul className='absolute top-full w-full z-10 bg-zinc-800 text-zinc-400 mt-2 rounded-xl'>
 							{suggestions.map((s) => (
@@ -101,6 +104,8 @@ export default function CreateRoom() {
 						</ul>
 					)}
 				</div>
+
+				{/* Current Location Button */}
 				<Button
 					variant={'outline'}
 					size={'icon'}
@@ -127,10 +132,15 @@ export default function CreateRoom() {
 					<LocateFixed></LocateFixed>
 				</Button>
 			</div>
+
+			{/* Map */}
 			<Map
 				value={location}
+				radiusInMiles={selectedRadius}
 				onChange={setLocation}
 			/>
+
+			{/* Mile Radius Slider */}
 			<div className='mx-auto flex flex-col w-1/2'>
 				<Slider
 					min={0}
@@ -141,15 +151,47 @@ export default function CreateRoom() {
 				></Slider>
 			</div>
 
+			{/* Mile Radius Steps */}
 			<div className='flex justify-between text-xs text-muted-foreground w-4/7'>
-				<span className={radiusIndex === 0 ? `text-amber-500` : ``}>0.5 mi</span>
-				<span className={radiusIndex === 1 ? `text-amber-500` : ``}>1 mi</span>
-				<span className={radiusIndex === 2 ? `text-amber-500` : ``}>3 mi</span>
-				<span className={radiusIndex === 3 ? `text-amber-500` : ``}>5 mi</span>
+				<span
+					className={radiusIndex === 0 ? `text-amber-500` : ``}
+					onClick={() => {
+						setRadiusIndex(0);
+					}}
+				>
+					0.5 mi
+				</span>
+				<span
+					className={radiusIndex === 1 ? `text-amber-500` : ``}
+					onClick={() => {
+						setRadiusIndex(1);
+					}}
+				>
+					1 mi
+				</span>
+				<span
+					className={radiusIndex === 2 ? `text-amber-500` : ``}
+					onClick={() => {
+						setRadiusIndex(2);
+					}}
+				>
+					3 mi
+				</span>
+				<span
+					className={radiusIndex === 3 ? `text-amber-500` : ``}
+					onClick={() => {
+						setRadiusIndex(3);
+					}}
+				>
+					5 mi
+				</span>
 			</div>
 
 			<div className=''>
+				{/* Create Button */}
 				<Button>Create</Button>
+
+				{/* Cancel Button */}
 				<Button onClick={() => router.push('/')}>Cancel</Button>
 			</div>
 		</section>
