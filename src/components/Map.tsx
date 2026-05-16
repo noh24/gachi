@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef } from "react";
-import maplibregl, { LngLatLike } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { useEffect, useRef } from 'react';
+import maplibregl, { LngLatLike } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 export type LocationValue = {
 	lat: number;
@@ -20,7 +20,7 @@ type Props = {
 	onChange?: (location: LocationValue) => void;
 };
 
-export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, }: Props) {
+export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange }: Props) {
 	const mapContainer = useRef<HTMLDivElement | null>(null);
 	const mapRef = useRef<maplibregl.Map | null>(null);
 	const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -34,16 +34,16 @@ export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, 
 	useEffect(() => {
 		if (!mapContainer.current || mapRef.current) return;
 
-		const initialLngLat = toLngLat(value ?? defaultValue)
+		const initialLngLat = toLngLat(value ?? defaultValue);
 
 		const emitChange = (location: LocationValue) => {
 			lastEmittedRef.current = location;
 			onChangeRef.current?.(location);
-		}
+		};
 
 		const map = new maplibregl.Map({
 			container: mapContainer.current,
-			style: "https://tiles.stadiamaps.com/styles/alidade_smooth.json",
+			style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
 			center: initialLngLat,
 			zoom: 12,
 		});
@@ -52,17 +52,16 @@ export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, 
 			.setLngLat(initialLngLat)
 			.addTo(map);
 
-
 		const handleMapClick = (event: maplibregl.MapMouseEvent) => {
-			const nextLocation = fromLngLat(event.lngLat)
+			const nextLocation = fromLngLat(event.lngLat);
 
-			marker.setLngLat(event.lngLat)
+			marker.setLngLat(event.lngLat);
 			mapRef.current?.flyTo({
 				center: event.lngLat,
-				zoom: Math.max(mapRef.current?.getZoom(), 12)
-			})
+				zoom: Math.max(mapRef.current?.getZoom(), 12),
+			});
 
-			emitChange(nextLocation)
+			emitChange(nextLocation);
 		};
 
 		const handleMarkerDragEnd = () => {
@@ -71,19 +70,19 @@ export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, 
 
 		map.addControl(new maplibregl.NavigationControl());
 
-		map.on("click", handleMapClick)
-		marker.on("dragend", handleMarkerDragEnd);
+		map.on('click', handleMapClick);
+		marker.on('dragend', handleMarkerDragEnd);
 
 		markerRef.current = marker;
 		mapRef.current = map;
 
 		return () => {
 			map.off('click', handleMapClick);
-			marker.off('dragend', handleMarkerDragEnd)
+			marker.off('dragend', handleMarkerDragEnd);
 			map.remove();
 			mapRef.current = null;
 			markerRef.current = null;
-		}
+		};
 	}, []);
 
 	useEffect(() => {
@@ -91,10 +90,9 @@ export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, 
 
 		const lastEmitted = lastEmittedRef.current;
 
-		if (lastEmitted?.lat === value.lat && lastEmitted.lng === value.lng)
-			return;
+		if (lastEmitted?.lat === value.lat && lastEmitted.lng === value.lng) return;
 
-		const nextLngLat = toLngLat(value)
+		const nextLngLat = toLngLat(value);
 
 		markerRef.current.setLngLat(nextLngLat);
 
@@ -107,15 +105,15 @@ export default function Map({ value, defaultValue = DEFAULT_LOCATION, onChange, 
 	return (
 		<div
 			ref={mapContainer}
-			className="h-100 w-full rounded-2xl overflow-hidden border shadow"
+			className='h-100 w-full rounded-2xl overflow-hidden border shadow'
 		></div>
 	);
 }
 
 function toLngLat(location: LocationValue): LngLatLike {
-	return [location.lng, location.lat]
+	return [location.lng, location.lat];
 }
 
 function fromLngLat(lngLat: maplibregl.LngLat): LocationValue {
-	return { lat: lngLat.lat, lng: lngLat.lng }
+	return { lat: lngLat.lat, lng: lngLat.lng };
 }

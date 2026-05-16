@@ -29,8 +29,9 @@ Granular step-by-step breakdown. Check items off as you go.
 - [x] Create `GET /api/geocode` route — proxies query to Geoapify Autocomplete API (`/v1/geocode/autocomplete?text=...&limit=5&apiKey=...`) using server-side `GEOAPIFY_API_KEY`, returns mapped array of `{ label: string, lat: number, lng: number }` — Geoapify default limit is 5, max is 20; 5 is enough for a suggestion dropdown
 - [x] Debounce keystrokes at 300ms — short enough to feel responsive, long enough to avoid firing on every character
 - [x] Call `GET /api/geocode?q=...` with the debounced query, map response features: `properties.formatted` → `label`, `geometry.coordinates[1]` → `lat`, `geometry.coordinates[0]` → `lng` (GeoJSON is lng-first)
-- [ ] Render suggestion dropdown under the input
-- [ ] On suggestion select: update location state, fly map to that location, close the dropdown
+- [x] Render suggestion dropdown under the input
+- [x] On suggestion select: update location state, fly map to that location, close the dropdown
+- [x] maybe render no suggestion?
 
 ### Radius Selector
 

@@ -7,17 +7,17 @@ export async function GET(request: NextRequest) {
 	if (!q || q.trim() === '') {
 		return NextResponse.json({ error: 'invalid query' }, { status: 400 });
 	}
-    
-	const url = new URL('https://api.geoapify.com/v1/geocode/autocomplete');
-	url.searchParams.set('text', q);
+	const url = new URL('https://api.mapbox.com/search/geocode/v6/forward');
+	url.searchParams.set('q', q);
 	url.searchParams.set('limit', '5');
-	url.searchParams.set('apiKey', process.env.GEOAPIFY_API_KEY);
+	url.searchParams.set('access_token', process.env.MAPBOX_API_KEY);
 
 	try {
 		const response = await fetch(url.toString());
 
 		if (!response.ok) {
-			return NextResponse.json({ error: 'geocoding failed' }, { status: 502 });
+			console.error(response.status, response.statusText);
+			return NextResponse.json({ error: `geocoding failed` }, { status: 502 });
 		}
 
 		const data = await response.json();
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
 		const suggestions: GeocodingSuggestion[] = data.features.map(
 			(feature: GeoapifyFeature) => ({
-				label: feature.properties.formatted,
+				label: feature.properties.full_address,
 				lat: feature.geometry.coordinates[1],
 				lng: feature.geometry.coordinates[0],
 			}),
@@ -36,12 +36,12 @@ export async function GET(request: NextRequest) {
 
 		return NextResponse.json({ suggestions });
 	} catch (ex) {
-        console.error(ex)
-        return NextResponse.json({ error: 'internal error'}, {status: 500})
-    }
+		console.error(ex);
+		return NextResponse.json({ error: 'internal error' }, { status: 500 });
+	}
 }
 
 type GeoapifyFeature = {
-	properties: { formatted: string };
-	geometry: { coordinates: [number, number] };
+	properties: { full_address: string };
+	geometry: { coordinates: [lng: number, lat: number] };
 };
