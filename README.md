@@ -25,15 +25,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Copy `.env.example` to `.env.local` and fill in your keys:
 
-```
-YELP_API_KEY=
+```env
+GOOGLE_PLACES_API_KEY=
 NEXT_PUBLIC_MAPBOX_TOKEN=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
-PUSHER_APP_ID=
-PUSHER_KEY=
-PUSHER_SECRET=
-PUSHER_CLUSTER=
 ```
 
 > Note: env vars are not required to run locally during development — fake data is used until the backend is wired up.
@@ -43,8 +39,7 @@ PUSHER_CLUSTER=
 - **Next.js 16 + TypeScript** — frontend and API routes
 - **shadcn/ui + Tailwind** — UI components
 - **Framer Motion** — swipe gestures and animations
-- **Mapbox + react-map-gl** — location picker
-- **Yelp Fusion API** — restaurant data
+- **Mapbox + MapLibre GL** — location picker, map, and geocoding
+- **Google Places API** — restaurant data and photos
 - **Upstash Redis** — vote storage and room state
-- **Pusher** — real-time sync mode
 - **Vercel** — deployment

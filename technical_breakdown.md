@@ -25,10 +25,10 @@ Granular step-by-step breakdown. Check items off as you go.
 
 ### Search Bar
 
-- [x] Research and pick a geocoding API (options: Mapbox Geocoding, Nominatim/OSM — decide on cost, key requirements, and response quality) - Went with Geoapify
-- [x] Create `GET /api/geocode` route — proxies query to Geoapify Autocomplete API (`/v1/geocode/autocomplete?text=...&limit=5&apiKey=...`) using server-side `GEOAPIFY_API_KEY`, returns mapped array of `{ label: string, lat: number, lng: number }` — Geoapify default limit is 5, max is 20; 5 is enough for a suggestion dropdown
+- [x] Research and pick a geocoding API (options: Mapbox Geocoding, Nominatim/OSM — decide on cost, key requirements, and response quality) - Went with Mapbox Geocoding API
+- [x] Create `GET /api/geocode` route — proxies query to Mapbox Geocoding API using server-side `MAPBOX_TOKEN`, returns mapped array of `{ label: string, lat: number, lng: number }`
 - [x] Debounce keystrokes at 300ms — short enough to feel responsive, long enough to avoid firing on every character
-- [x] Call `GET /api/geocode?q=...` with the debounced query, map response features: `properties.formatted` → `label`, `geometry.coordinates[1]` → `lat`, `geometry.coordinates[0]` → `lng` (GeoJSON is lng-first)
+- [x] Call `GET /api/geocode?q=...` with the debounced query, map response features to `{ label, lat, lng }`
 - [x] Render suggestion dropdown under the input
 - [x] On suggestion select: update location state, fly map to that location, close the dropdown
 - [x] maybe render no suggestion?
@@ -74,14 +74,15 @@ Why Redis:
 
 ---
 
-## Yelp Client
+## Google Places Client
 
-File: `src/lib/yelp.ts`
+File: `src/lib/places.ts`
 
-- [ ] Add `YELP_API_KEY` to `.env.local`
-- [ ] Update `src/types/restaurant.ts` — add `distance: number`, change `cuisine: string` to `categories: string[]`, make `priceLevel` optional
-- [ ] Write `searchRestaurants(lat: number, lng: number): Promise<Restaurant[]>` — calls `GET https://api.yelp.com/v3/businesses/search` with Bearer token, always at 5mi (~8047m radius), limit 50, maps response to `Restaurant` type
-- [ ] Pin: decide on `sort_by` — `distance` makes radius filtering predictable but `best_match` surfaces better-rated restaurants first. Revisit when wiring up.
+- [x] Add `GOOGLE_PLACES_API_KEY` to `.env.local`
+- [x] Update `src/types/restaurant.ts` — add `distance: number`, add `photoUrl: string`, change `cuisine: string` to `categories: string[]`, make `priceLevel` optional
+- [ ] Write `searchRestaurants(lat: number, lng: number): Promise<Restaurant[]>` — calls `POST https://places.googleapis.com/v1/places:searchNearby` with `X-Goog-Api-Key` header, always at 5mi (~8047m) radius, `maxResultCount: 20`, `rankPreference: "POPULARITY"`, maps response to `Restaurant` type
+- [ ] Pin: use `X-Goog-FieldMask` request header to specify only needed fields — `places.id,places.displayName,places.rating,places.priceLevel,places.types,places.photos,places.distanceMeters` — Google charges by fields requested, never ask for more than you need
+- [ ] Pin: photo URL is constructed from `photos[0].name` on each place result — format is `https://places.googleapis.com/v1/{photoResourceName}/media?key=API_KEY&maxHeightPx=400&maxWidthPx=400`. Build and embed the URL at search time so the API key never reaches the frontend.
 
 ---
 
@@ -94,16 +95,16 @@ Request body: `{ lat, lng, radius, mode, expiresAt }`
 Responses:
 
 - `201 Created` + `{ roomId: string }` — room created successfully
-- `422 Unprocessable Entity` + `{ error: "no restaurants found in this area" }` — valid request but Yelp returned 0 results; no room is created
+- `422 Unprocessable Entity` + `{ error: "no restaurants found in this area" }` — valid request but Google Places returned 0 results; no room is created
 - `400 Bad Request` + `{ error: string }` — missing or invalid fields
 
 Flow:
 
 - [ ] Validate incoming request body (lat, lng, radius, mode all required)
-- [ ] Round lat/lng to 2 decimal places to form Yelp cache key (e.g. `restaurant-cache:37.77:-122.41`) — no radius in key
+- [ ] Round lat/lng to 2 decimal places to form Places cache key (e.g. `restaurant-cache:37.77:-122.41`) — no radius in key
 - [ ] Check Redis for existing results at that cache key
-- [ ] If cache miss: call Yelp Fusion API at 5mi (max radius) and cache the full result with 24h TTL
-- [ ] Filter cached results down to the requested radius using the `distance` field Yelp returns on each result
+- [ ] If cache miss: call Google Places Nearby Search API at 5mi (~8047m) and cache the full result with 30 day TTL
+- [ ] Filter cached results down to the requested radius using the `distanceMeters` field on each result (convert selected radius from miles to meters for comparison)
 - [ ] If 0 restaurants remain after filtering: return 422
 - [ ] Generate roomId (decide: `crypto.randomUUID()` vs `nanoid` for shorter URLs)
 - [ ] Write room to Redis: `room:<roomId>` → `{ mode, expiresAt, status: "voting", userIds: [], restaurants: [...] }` with TTL matching expiresAt
